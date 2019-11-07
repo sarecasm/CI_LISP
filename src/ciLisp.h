@@ -63,10 +63,7 @@ typedef enum {
 // Node to store a number.
 typedef struct {
     NUM_TYPE type;
-    union{
-        double dval;
-        long ival;
-    } value;
+    double value;
 } NUM_AST_NODE;
 
 // Values returned by eval function will be numbers with a type.
