@@ -56,7 +56,7 @@ typedef enum {
 
 // Types of numeric values
 typedef enum {
-    INT_TYPE,
+    INT_TYPE = 0,
     DOUBLE_TYPE
 } NUM_TYPE;
 
@@ -96,8 +96,8 @@ AST_NODE *createFunctionNode(char *funcName, AST_NODE *op1, AST_NODE *op2);
 void freeNode(AST_NODE *node);
 
 RET_VAL eval(AST_NODE *node);
-RET_VAL evalNumNode(NUM_AST_NODE *numNode);
-RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode);
+RET_VAL evalNumNode(AST_NODE *node);
+RET_VAL evalFuncNode(AST_NODE *node);
 
 void printRetVal(RET_VAL val);
 

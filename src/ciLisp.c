@@ -143,9 +143,9 @@ RET_VAL eval(AST_NODE *node)
 
 // returns a pointer to the NUM_AST_NODE (aka RET_VAL) referenced by node.
 // DOES NOT allocate space for a new RET_VAL.
-RET_VAL evalNumNode(NUM_AST_NODE *numNode)
+RET_VAL evalNumNode(AST_NODE *node)
 {
-    if (!numNode)
+    if (!node)
         return (RET_VAL){INT_TYPE, NAN};
 
     RET_VAL result = {INT_TYPE, NAN};
@@ -158,9 +158,9 @@ RET_VAL evalNumNode(NUM_AST_NODE *numNode)
 }
 
 
-RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
+RET_VAL evalFuncNode(AST_NODE *node)
 {
-    if (!funcNode)
+    if (!node)
         return (RET_VAL){INT_TYPE, NAN};
 
     RET_VAL result = {INT_TYPE, NAN};
