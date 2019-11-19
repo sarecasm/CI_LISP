@@ -8,6 +8,7 @@ ciLisp Project
 Task 1 Submission
 * Completed TODO Tasks for Task 1 
 * No issues were found 
+* Knows it works because terminal produces the right output for add, subtract, divide, etc.
 
 
 Sample Tests
@@ -24,4 +25,5 @@ Data: 1.000000
 >  (div 6 3)
 Type: 0
 Data: 2.000000
-*
+***
+Task 2 Submission 
