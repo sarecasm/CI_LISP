@@ -34,6 +34,7 @@ char *funcNames[] = {
         ""
 };
 
+
 OPER_TYPE resolveFunc(char *funcName)
 {
     int i = 0;
@@ -45,6 +46,13 @@ OPER_TYPE resolveFunc(char *funcName)
     }
     return CUSTOM_OPER;
 }
+
+//AST_NODE *setSymbolTableNode(SYMBOL_TABLE_NODE *symbolTable, AST_NODE *s_expr)
+//{
+//    s_expr->symbolTable = symbolTable;
+//    return s_expr;
+//}
+
 
 // Called when an INT or DOUBLE token is encountered (see ciLisp.l and ciLisp.y).
 // Creates an AST_NODE for the number.
@@ -191,67 +199,84 @@ RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
 
     RET_VAL result = {INT_TYPE, NAN};
 
-    // TODO populate result with the result of running the function on its operands.
+    RET_VAL op1 = eval(funcNode->op1);
+    RET_VAL op2 = eval(funcNode->op2);
+
+    // TODO DONE populate result with the result of running the function on its operands.
     // SEE: AST_NODE, AST_NODE_TYPE, FUNC_AST_NODE
+
+    // Updated from previous submission
     switch(funcNode->oper)
     {
         case NEG_OPER:
-            result.value = -eval(funcNode->op1).value;
+            result.value = -op1.value;
             break;
         case ABS_OPER:
-            result.value = fabs(eval(funcNode->op1).value);
+            result.value = fabs(op1.value);
             break;
         case EXP_OPER:
-            result.value = exp(eval(funcNode->op1).value);
+            result.value = exp(op1.value);
             break;
         case SQRT_OPER:
-            result.value = sqrt(eval(funcNode->op1).value);
+            result.value = sqrt(op1.value);
             break;
         case ADD_OPER:
-            result.value = eval(funcNode->op1).value + eval(funcNode->op2).value;
+            result.value = op1.value + op2.value;
             break;
         case SUB_OPER:
-            result.value = eval(funcNode->op1).value - eval(funcNode->op2).value;
+            result.value = op1.value - op2.value;
             break;
         case MULT_OPER:
-            result.value = eval(funcNode->op1).value * eval(funcNode->op2).value;
+            result.value = op1.value * op2.value;
             break;
         case DIV_OPER:
-            result.value = eval(funcNode->op1).value / eval(funcNode->op2).value;
+            result.value = op1.value / op2.value;
             break;
         case REMAINDER_OPER:
-            result.value = fmod(eval(funcNode->op1).value, eval(funcNode->op2).value);
+            result.value = fmod(op1.value, op2.value);
             break;
         case LOG_OPER:
-            result.value = log(eval(funcNode->op1).value);
+            result.value = log(op1.value);
             break;
         case POW_OPER:
-            result.value = pow(eval(funcNode->op1).value, eval(funcNode->op2).value);
+            result.value = pow(op1.value, op2.value);
             break;
         case MAX_OPER:
-            result.value = fmax(eval(funcNode->op1).value, eval(funcNode->op2).value);
+            result.value = fmax(op1.value, op2.value);
             break;
         case MIN_OPER:
-            result.value = fmin(eval(funcNode->op1).value, eval(funcNode->op2).value);
+            result.value = fmin(op1.value, op2.value);
             break;
         case EXP2_OPER:
-            result.value = exp2(eval(funcNode->op1).value);
+            result.value = exp2(op1.value);
             break;
         case CBRT_OPER:
-            result.value = cbrt(eval(funcNode->op1).value);
+            result.value = cbrt(op1.value);
             break;
         case HYPOT_OPER:
-            result.value = hypot(eval(funcNode->op1).value, eval(funcNode->op2).value);
+            result.value = hypot(op1.value, op2.value);
             break;
         default:
             break;
-    }
+        }
     return result;
 }
 
 // prints the type and value of a RET_VAL
 void printRetVal(RET_VAL val)
 {
-    // TODO print the type and value of the value passed in.
-    printf("Type: %u\nData: %f\n", val.type, val.value);
+    // TODO DONE print the type and value of the value passed in.
+
+    // Updated from previous submission
+    printf("Data: %f\n", val.value);
+    if (val.type == INT_TYPE) {
+        printf("Type: Integer");
+    }
+    else if (val.type == DOUBLE_TYPE) {
+        printf("Type: Double");
+    }
+    else {
+        printf("I don't know what type you are");
+    }
+
 }

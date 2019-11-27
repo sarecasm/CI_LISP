@@ -26,9 +26,9 @@ program:
     };
 
 s_expr:
-     number {
-         fprintf(stderr, "yacc: s_expr ::= number\n");
-         $$ = $1;
+    number {
+        fprintf(stderr, "yacc: s_expr ::= number\n");
+        $$ = $1;
     }
     | f_expr {
         $$ = $1;
