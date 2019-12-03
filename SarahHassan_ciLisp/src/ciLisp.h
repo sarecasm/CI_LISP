@@ -52,7 +52,7 @@ OPER_TYPE resolveFunc(char *);
 typedef enum {
     NUM_NODE_TYPE,
     FUNC_NODE_TYPE,
-    SYM_NODE_TYPE
+    SYMBOL_NODE_TYPE
 } AST_NODE_TYPE;
 
 // Types of numeric values
@@ -108,15 +108,18 @@ AST_NODE *createNumberNode(double value, NUM_TYPE type);
 
 AST_NODE *createFunctionNode(char *funcName, AST_NODE *op1, AST_NODE *op2);
 
+AST_NODE *createSymbolNode(char *symbolTableNode);
+AST_NODE *createSymbolTableNode(SYMBOL_TABLE_NODE *symbolTable, AST_NODE *s_expr);
+SYMBOL_TABLE_NODE *addSymbolToList(SYMBOL_TABLE_NODE *list, SYMBOL_TABLE_NODE *elem); // let_list
+SYMBOL_TABLE_NODE *createSymbol(char *symbol, AST_NODE *s_expr); // let_elem
+
 void freeNode(AST_NODE *node);
 
 RET_VAL eval(AST_NODE *node);
 RET_VAL evalNumNode(NUM_AST_NODE *numNode);
 RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode);
+RET_VAL evalSymbolNode(AST_NODE *symbolNode);
 
 void printRetVal(RET_VAL val);
 
 #endif
-
-// createSymbolTable function
-// addToSymbolTable add in c file

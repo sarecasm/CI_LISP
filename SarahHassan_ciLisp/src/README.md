@@ -81,3 +81,51 @@ Sample Tests
 * Type: Integer
 ***
 Task 2 Submission 
+* Completed Task 2
+* No issues were found 
+* Knows it works because the terminal produces the right output from the given examples on the project.
+* Tested both the first and last box examples. No error.  
+* Updated the I file, Y file, C file, and H file. 
+* I File received two updates in regards to implementing let and symbol.
+* Y, H, and C files received a lot of implementations in regards to Task 2.
+* Completed 12/3
+
+"/Users/SarahHassan/Desktop/Sarah Hassan ciLisp/CI_LISP/SarahHassan_ciLisp/cmake-build-debug/cilisp"
+
+> (add ((let (abc 1)) (sub 3 abc)) 4)
+* Data: 6.000000
+* Type: Double
+
+> (mult ((let (a 1) (b 2)) (add a b)) (sqrt 2))
+* Data: 4.242641
+* Type: Double
+
+> (add ((let (a ((let (b 2)) (mult b (sqrt 10))))) (div a 2)) ((let (c 5)) (sqrt c)))
+* Data: 5.398346
+* Type: Double
+
+> ((let (first (sub 5 1)) (second 2)) (add (pow 2 first) (sqrt second)))
+* Data: 17.414214
+* Type: Double
+
+> (add ((let (abcd 1)) (sub 3 abcd)) 4)
+* Data: 6.000000
+* Type: Double
+
+> (mult ((let (a 1) (b 2)) (add a b)) (sqrt 2))
+* Data: 4.242641
+* Type: Double
+
+> (add ((let (a ((let (b 2)) (mult b (sqrt 10))))) (div a 2)) ((let (c 5)) (sqrt c)))
+* Data: 5.398346
+* Type: Double
+
+> ((let (first (sub 5 1)) (second 2)) (add (pow 2 first) (sqrt second)))
+* Data: 17.414214
+* Type: Double
+
+> ((let (a ((let (c 3) (d 4)) (mult c d)))) (sqrt a))
+* Data: 3.464102
+* Type: Double
+
+

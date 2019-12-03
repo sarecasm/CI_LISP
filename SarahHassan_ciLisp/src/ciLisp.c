@@ -47,13 +47,6 @@ OPER_TYPE resolveFunc(char *funcName)
     return CUSTOM_OPER;
 }
 
-//AST_NODE *setSymbolTableNode(SYMBOL_TABLE_NODE *symbolTable, AST_NODE *s_expr)
-//{
-//    s_expr->symbolTable = symbolTable;
-//    return s_expr;
-//}
-
-
 // Called when an INT or DOUBLE token is encountered (see ciLisp.l and ciLisp.y).
 // Creates an AST_NODE for the number.
 // Sets the AST_NODE's type to number.
@@ -71,11 +64,11 @@ AST_NODE *createNumberNode(double value, NUM_TYPE type)
 
     // TODO set the AST_NODE's type, assign values to contained NUM_AST_NODE
 
-         node->type = NUM_NODE_TYPE;
-         node->data.number.type = type;
-         node->data.number.value = value;
+    node->type = NUM_NODE_TYPE;
+    node->data.number.type = type;
+    node->data.number.value = value;
 
-         return node;
+    return node;
 }
 
 // Called when an f_expr is created (see ciLisp.y).
@@ -116,8 +109,69 @@ AST_NODE *createFunctionNode(char *funcName, AST_NODE *op1, AST_NODE *op2)
     node->data.function.op1 = op1;
     node->data.function.op2 = op2;
 
+    if(op1 != NULL) {
+        node->data.function.op1->parent = node;
+    }
+    if(op2 != NULL) {
+        node->data.function.op2->parent = node;
+    }
+
     return node;
 }
+AST_NODE *createSymbolNode(char *symbolTableNode){
+    // copied AST_NODE createFunctionNode
+    AST_NODE *node;
+    size_t nodeSize;
+
+    // allocate space (or error)
+    nodeSize = sizeof(AST_NODE);
+    if ((node = calloc(nodeSize, 1)) == NULL)
+        yyerror("Memory allocation failed!");
+
+    node->type = SYMBOL_NODE_TYPE;
+    node->parent = NULL;
+    node->data.symbol.ident = symbolTableNode;
+
+    return node;
+}
+AST_NODE *createSymbolTableNode(SYMBOL_TABLE_NODE *symbolTable, AST_NODE *s_expr)
+{
+    SYMBOL_TABLE_NODE *node = symbolTable;
+    s_expr->symbolTable = symbolTable;
+
+    while ( node != NULL )
+    {
+        node->val->parent = s_expr;
+        node = node->next;
+    }
+
+    return s_expr;
+}
+
+SYMBOL_TABLE_NODE *addSymbolToList(SYMBOL_TABLE_NODE *list, SYMBOL_TABLE_NODE *elem) // let_list
+{
+    elem->next = list;
+
+    return elem;
+}
+
+SYMBOL_TABLE_NODE *createSymbol(char *symbol, AST_NODE *s_expr) // let_elem
+{
+    // followed AST_NODE createFunctionNode
+    SYMBOL_TABLE_NODE *node;
+    size_t nodeSize;
+
+    nodeSize = sizeof(SYMBOL_TABLE_NODE);
+    if ((node = calloc(nodeSize, 1)) == NULL)
+        yyerror("Memory allocation failed!");
+
+    node->ident = symbol;
+    node->val = s_expr;
+    node->next = NULL;
+
+    return node;
+}
+
 
 // Called after execution is done on the base of the tree.
 // (see the program production in ciLisp.y)
@@ -151,9 +205,9 @@ void freeNode(AST_NODE *node)
 RET_VAL eval(AST_NODE *node)
 {
     if (!node)
-        return (RET_VAL){INT_TYPE, NAN};
+        return (RET_VAL){DOUBLE_TYPE, NAN};
 
-    RET_VAL result = {INT_TYPE, NAN}; // see NUM_AST_NODE, because RET_VAL is just an alternative name for it.
+    RET_VAL result = {DOUBLE_TYPE, NAN}; // see NUM_AST_NODE, because RET_VAL is just an alternative name for it.
 
     // TODO complete the switch.
     // Make calls to other eval functions based on node type.
@@ -166,12 +220,14 @@ RET_VAL eval(AST_NODE *node)
         case NUM_NODE_TYPE:
             result = evalNumNode(&node->data.number);
             break;
-        default:  
+        case SYMBOL_NODE_TYPE:
+            result = evalSymbolNode(node);
+        default:
             yyerror("Invalid AST_NODE_TYPE, probably invalid writes somewhere!");
     }
 
     return result;
-}  
+}
 
 // returns a pointer to the NUM_AST_NODE (aka RET_VAL) referenced by node.
 // DOES NOT allocate space for a new RET_VAL.
@@ -187,7 +243,7 @@ RET_VAL evalNumNode(NUM_AST_NODE *numNode)
 
     result.value = numNode->value;
 
-   return result;
+    return result;
 
 }
 
@@ -195,9 +251,9 @@ RET_VAL evalNumNode(NUM_AST_NODE *numNode)
 RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
 {
     if (!funcNode)
-        return (RET_VAL){INT_TYPE, NAN};
+        return (RET_VAL){DOUBLE_TYPE, NAN};
 
-    RET_VAL result = {INT_TYPE, NAN};
+    RET_VAL result = {DOUBLE_TYPE, NAN};
 
     RET_VAL op1 = eval(funcNode->op1);
     RET_VAL op2 = eval(funcNode->op2);
@@ -258,8 +314,37 @@ RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
             break;
         default:
             break;
-        }
+    }
     return result;
+}
+
+RET_VAL evalSymbolNode(AST_NODE *symbolNode) {
+    // following RET_VAL evalFuncNode
+    if (!symbolNode)
+        return (RET_VAL){DOUBLE_TYPE, NAN};
+
+    RET_VAL result = {DOUBLE_TYPE, NAN};
+    char *symbol = symbolNode->data.symbol.ident;
+    AST_NODE *currentNode = symbolNode;
+    SYMBOL_TABLE_NODE *currentTable;
+
+    while (currentNode != NULL)
+    {
+        currentTable = currentNode->symbolTable;
+
+        while (currentTable != NULL)
+        {
+            if (strcmp( symbol, currentTable->ident) == 0)
+            {
+                result = eval(currentTable->val);
+                return result;
+            }
+            currentTable = currentTable->next;
+        }
+        currentNode = currentNode->parent;
+    }
+    return result;
+
 }
 
 // prints the type and value of a RET_VAL
