@@ -11,7 +11,7 @@
 
 %token <sval> FUNC SYMBOL
 %token <dval> INT DOUBLE
-%token LPAREN RPAREN LET EOL QUIT
+%token LPAREN RPAREN LET EOL QUIT TYPE_INT TYPE_DOUBLE
 
 %type <astNode> s_expr f_expr number
 %type <symbolNode> let_elem let_section let_list
@@ -59,9 +59,25 @@ number:
         fprintf(stderr, "yacc: number ::= INT\n");
         $$ = createNumberNode($1, INT_TYPE);
     }
+    | TYPE_INT INT {
+    	fprintf(stderr, "yacc: number ::= INT\n");
+    	$$ = createNumberNode($2, INT_TYPE);
+    }
+    | TYPE_DOUBLE INT {
+    	fprintf(stderr, "yacc: number ::= INT\n");
+    	$$ = createNumberNode($2, DOUBLE_TYPE);
+    }
     | DOUBLE {
         fprintf(stderr, "yacc: number ::= DOUBLE\n");
         $$ = createNumberNode($1, DOUBLE_TYPE);
+    }
+    | TYPE_INT DOUBLE {
+        fprintf(stderr, "yacc: number ::= DOUBLE\n");
+        $$ = createNumberNode($2, INT_TYPE);
+    }
+    | TYPE_DOUBLE DOUBLE {
+        fprintf(stderr, "yacc: number ::= DOUBLE\n");
+        $$ = createNumberNode($2, DOUBLE_TYPE);
     };
 
 f_expr:
@@ -97,9 +113,19 @@ let_list:
     };
 
 let_elem:
-    LPAREN SYMBOL s_expr RPAREN {
-        fprintf(stderr, "yacc: let_elem ::= LPAREN SYMBOL s_expr RPAREN \n");
-//    	fprintf(stderr, "yacc: s_expr ::= LPAREN LET let_list RPAREN\n");
-    	$$ = createSymbol($2, $3);
+// From Task 2
+//    LPAREN SYMBOL s_expr RPAREN {
+//        fprintf(stderr, "yacc: let_elem ::= LPAREN SYMBOL s_expr RPAREN \n");
+////    	fprintf(stderr, "yacc: s_expr ::= LPAREN LET let_list RPAREN\n");
+//    	$$ = createSymbol($2, $3);
+//    };
+// Task 3
+    LPAREN TYPE_INT SYMBOL s_expr RPAREN {
+        fprintf(stderr, "yacc: let_elem ::= LPAREN TYPE_INT SYMBOL s_expr RPAREN \n");
+        $$ = createSymbol(INT_TYPE, $3, $4);
+    }
+    | LPAREN TYPE_DOUBLE SYMBOL s_expr RPAREN {
+        fprintf(stderr, "yacc: let_elem ::= LPAREN TYPE_DOUBLE SYMBOL s_expr RPAREN \n");
+	$$ = createSymbol(DOUBLE_TYPE, $3, $4);
     };
 %%

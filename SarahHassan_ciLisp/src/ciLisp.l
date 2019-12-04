@@ -34,6 +34,15 @@ symbol {letter}+
     return LET;
     }
 
+"int" {
+    return TYPE_INT;
+    }
+
+"double" {
+    return TYPE_DOUBLE;
+    }
+
+
 {func} {
     yylval.sval = (char *) malloc(strlen(yytext)*sizeof(char)+1);
     strcpy(yylval.sval, yytext);

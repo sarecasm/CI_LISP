@@ -30,8 +30,7 @@ char *funcNames[] = {
         "print",
         "equal",
         "less",
-        "greater",
-        ""
+        "greater"
 };
 
 
@@ -68,6 +67,8 @@ AST_NODE *createNumberNode(double value, NUM_TYPE type)
     node->data.number.type = type;
     node->data.number.value = value;
 
+    node->parent = NULL;
+
     return node;
 }
 
@@ -98,6 +99,8 @@ AST_NODE *createFunctionNode(char *funcName, AST_NODE *op1, AST_NODE *op2)
     node->type = FUNC_NODE_TYPE;
     node->data.function.oper = resolveFunc(funcName);
 
+    node->parent = NULL;
+
     if(node->data.function.oper  == CUSTOM_OPER) {
         node->data.function.ident = malloc(sizeof(char));
         node->data.function.ident = funcName;
@@ -118,6 +121,7 @@ AST_NODE *createFunctionNode(char *funcName, AST_NODE *op1, AST_NODE *op2)
 
     return node;
 }
+
 AST_NODE *createSymbolNode(char *symbolTableNode){
     // copied AST_NODE createFunctionNode
     AST_NODE *node;
@@ -136,14 +140,14 @@ AST_NODE *createSymbolNode(char *symbolTableNode){
 }
 AST_NODE *createSymbolTableNode(SYMBOL_TABLE_NODE *symbolTable, AST_NODE *s_expr)
 {
-    SYMBOL_TABLE_NODE *node = symbolTable;
+    //SYMBOL_TABLE_NODE *node = symbolTable;
     s_expr->symbolTable = symbolTable;
 
-    while ( node != NULL )
-    {
-        node->val->parent = s_expr;
-        node = node->next;
-    }
+//    while ( node != NULL )
+//    {
+//        node->val->parent = s_expr;
+//        node = node->next;
+//    }
 
     return s_expr;
 }
@@ -155,7 +159,7 @@ SYMBOL_TABLE_NODE *addSymbolToList(SYMBOL_TABLE_NODE *list, SYMBOL_TABLE_NODE *e
     return elem;
 }
 
-SYMBOL_TABLE_NODE *createSymbol(char *symbol, AST_NODE *s_expr) // let_elem
+SYMBOL_TABLE_NODE *createSymbol(NUM_TYPE type, char *symbol, AST_NODE *s_expr) // let_elem
 {
     // followed AST_NODE createFunctionNode
     SYMBOL_TABLE_NODE *node;
@@ -165,6 +169,8 @@ SYMBOL_TABLE_NODE *createSymbol(char *symbol, AST_NODE *s_expr) // let_elem
     if ((node = calloc(nodeSize, 1)) == NULL)
         yyerror("Memory allocation failed!");
 
+    // Updated for Task 3
+    node->val_type = type;
     node->ident = symbol;
     node->val = s_expr;
     node->next = NULL;
@@ -222,6 +228,7 @@ RET_VAL eval(AST_NODE *node)
             break;
         case SYMBOL_NODE_TYPE:
             result = evalSymbolNode(node);
+            break;
         default:
             yyerror("Invalid AST_NODE_TYPE, probably invalid writes somewhere!");
     }
@@ -236,17 +243,19 @@ RET_VAL evalNumNode(NUM_AST_NODE *numNode)
     if (!numNode)
         return (RET_VAL){INT_TYPE, NAN};
 
-    RET_VAL result = {INT_TYPE, NAN};
+    //RET_VAL result = {INT_TYPE, NAN};
+    //RET_VAL result = {DOUBLE_TYPE, NAN};
+
+    RET_VAL result; // Updated for Task 3
 
     // TODO populate result with the values stored in the node.
     // SEE: AST_NODE, AST_NODE_TYPE, NUM_AST_NODE
 
-    result.value = numNode->value;
+    //result.value = numNode->value;
+    result = *numNode; // Updated for Task 3
 
     return result;
-
 }
-
 
 RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
 {
@@ -318,6 +327,7 @@ RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
     return result;
 }
 
+// Task 2 Implementation
 RET_VAL evalSymbolNode(AST_NODE *symbolNode) {
     // following RET_VAL evalFuncNode
     if (!symbolNode)
@@ -327,6 +337,8 @@ RET_VAL evalSymbolNode(AST_NODE *symbolNode) {
     char *symbol = symbolNode->data.symbol.ident;
     AST_NODE *currentNode = symbolNode;
     SYMBOL_TABLE_NODE *currentTable;
+    SYMBOL_TABLE_NODE *found = NULL;
+    RET_VAL temp;
 
     while (currentNode != NULL)
     {
@@ -334,15 +346,26 @@ RET_VAL evalSymbolNode(AST_NODE *symbolNode) {
 
         while (currentTable != NULL)
         {
-            if (strcmp( symbol, currentTable->ident) == 0)
+            if (strcmp(symbol, currentTable->ident) == 0)
             {
-                result = eval(currentTable->val);
-                return result;
+                found = currentTable;
+                break;
             }
             currentTable = currentTable->next;
         }
         currentNode = currentNode->parent;
     }
+    // Task 3
+    if (found != NULL) {
+        temp = eval(found->val);
+        if(temp.type == DOUBLE_TYPE && found->val_type == INT_TYPE) {
+            temp.type = INT_TYPE;
+            temp.value = floor(temp.value);
+            printf("WARNING: precision loss in the assignment for variable %s\n", symbol);
+        }
+        return temp;
+    }
+
     return result;
 
 }

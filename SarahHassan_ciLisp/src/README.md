@@ -128,4 +128,39 @@ Task 2 Submission
 * Data: 3.464102
 * Type: Double
 
+***
+Task 3 Submission 
+
+* Updated l file by inserting "int" and "double"
+* Updated y file by fixing number and let_elem 
+* Updated C file in evalSymbolNode, evalNumNode
+* Updated h file in regards to adding NUM_TYPE as a parameter for *createSymbol
+* No issues were found, only issue is when copying and pasting the sample input and then modifying the int to a double after pasting it, an ERROR: invalid character >><< occurs. But after copying and pasting it again, it works. Or even when typing the whole input out from scratch in the terminal.. it works with no issues found. The issue arises sometimes not all the time. Realized the error when trying to change sample inputs. 
+* Knows it works because of the test cases below 
+* Completed 12/3 
+
+"/Users/SarahHassan/Desktop/Sarah Hassan ciLisp/CI_LISP/SarahHassan_ciLisp/cmake-build-debug/cilisp"
+
+> ((let (int a 1.25))(add a 1))
+* WARNING: precision loss in the assignment for variable a
+* Data: 2.000000
+* Type: Double
+
+> ((let (int a 5))(add a 1))
+* Data: 6.000000
+* Type: Double
+
+> ((let (int a 4.25))(sub a 2))
+* WARNING: precision loss in the assignment for variable a
+* Data: 2.000000
+* Type: Double
+
+> ((let (double a 1.25))(add a 1))
+* Data: 2.250000
+* Type: Double
+
+> ((let (int a 3))(mult a 2))
+* Data: 6.000000
+* Type: Double
+
 
