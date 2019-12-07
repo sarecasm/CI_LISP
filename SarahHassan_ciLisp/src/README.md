@@ -195,6 +195,19 @@ Task 4 Submission
 * Data: 21.000000
 * Type: Integer
 
+> (print (sqrt 8))
+* => 2.83
+* Data: 2.828427
+* Type: Double
+
+> (print (mult 6.5 5))
+* => 32.50
+* Data: 32.500000
+* Type: Double
+
+---
+Task 5 Submission
+
 
 
 
