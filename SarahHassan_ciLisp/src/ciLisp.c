@@ -251,8 +251,9 @@ RET_VAL evalNumNode(NUM_AST_NODE *numNode)
     // TODO populate result with the values stored in the node.
     // SEE: AST_NODE, AST_NODE_TYPE, NUM_AST_NODE
 
-    //result.value = numNode->value;
-    result = *numNode; // Updated for Task 3
+    // Updated for Task 4
+    result.value = numNode->value;
+    result.type = numNode->type;
 
     return result;
 }
@@ -321,6 +322,9 @@ RET_VAL evalFuncNode(FUNC_AST_NODE *funcNode)
         case HYPOT_OPER:
             result.value = hypot(op1.value, op2.value);
             break;
+        case PRINT_OPER:
+            result = printFunction(op1);
+            break;
         default:
             break;
     }
@@ -368,6 +372,19 @@ RET_VAL evalSymbolNode(AST_NODE *symbolNode) {
 
     return result;
 
+}
+
+// Task 4
+RET_VAL printFunction(RET_VAL ret) {
+    printf("=> ");
+    if(ret.type == INT_TYPE) {
+        printf("%lf", ret.value);
+    }
+    else {
+        printf("%.2lf", ret.value);
+    }
+    printf("\n");
+    return ret;
 }
 
 // prints the type and value of a RET_VAL

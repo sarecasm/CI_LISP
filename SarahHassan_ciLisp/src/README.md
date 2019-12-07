@@ -163,4 +163,39 @@ Task 3 Submission
 * Data: 6.000000
 * Type: Double
 
+***
+Task 4 Submission 
+
+* Updated C file by implementing printFunction & added Print Oper in switch statement in evalFuncNode & updated evalNumNode 
+* Updated h file by adding RET_VAL printFunction 
+* Updated l file by adding "print" in func 
+* No issues were found in printing the s_expr
+* Outputs are below for printing Int and Double
+* Completed 12/6
+
+"/Users/SarahHassan/Desktop/Sarah Hassan ciLisp/CI_LISP/SarahHassan_ciLisp/cmake-build-debug/cilisp"
+
+> (print 3)
+* => 3.000000
+* Data: 3.000000
+* Type: Integer
+
+> (print 4.5)
+* => 4.50
+* Data: 4.500000
+* Type: Double
+
+> (print 6.25)
+* => 6.25
+* Data: 6.250000
+* Type: Double
+
+> (print 21)
+* => 21.000000
+* Data: 21.000000
+* Type: Integer
+
+
+
+
 
