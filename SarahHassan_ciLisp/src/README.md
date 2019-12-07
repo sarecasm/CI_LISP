@@ -205,8 +205,6 @@ Task 4 Submission
 * Data: 32.500000
 * Type: Double
 
----
-Task 5 Submission
 
 
 
