@@ -205,6 +205,26 @@ Task 4 Submission
 * Data: 32.500000
 * Type: Double
 
+***
+Task 5 Submission 
+
+* Completed Task 5
+* Prints, issue is printing nan and not printing the last s_expression in the list as its own value 
+* Output from terminal below 
+* Updated Y file, l file, c file, h file
+* Created helper functions 
+* Updated evalFuncNode
+* Completed 12/9
+
+/Users/SarahHassan/Desktop/CI_LISP/SarahHassan_ciLisp/cmake-build-debug/cilisp
+
+> (add 1 2 3 4 5)
+* 15.00	
+> ((let (int a 1)(double b 2))(print a b 3))
+* => 1.00	2.00	3.00	nan	
+
+***
+
 
 
 
