@@ -224,9 +224,45 @@ Task 5 Submission
 * => 1.00	2.00	3.00	nan	
 
 ***
+Task 6 Submission
 
+* Completed Task 6
+* Updated l file by adding |"rand"|"read"|"equal"|"less"|"greater"
+and "cond"
+* Updated y file by adding LPAREN COND s_expr s_expr s_expr RPAREN
+* Updated h file by updating structs 
+* Updated c file by adding helper functions 
+* altered most of the code for Task 6 
+* Completed 12/11
 
+/Users/SarahHassan/Desktop/CI_LISP/SarahHassan_ciLisp/cmake-build-debug/cilisp
 
+> (greater 1 0)
+* 1
+
+> (less 1 0)
+* 0
+
+> (max 7 2)
+* 7
+
+> (min 1 0)
+* 0
+
+> (equal 7 7)
+* 1
+
+> (div 8 2)
+* 4
+
+> (add 3 4)
+* 7
+
+> (mult 3 2)
+* 6
+
+> ((let (a 0)) (cond (less (rand) 0.5) (add a 1) (sub a 1)))
+* 1
 
 
 
